@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hash Function | Hash Verse-Visualizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<div class="wrap"><section class="hero"><div>
+<h1>Hash Function</h1><div class="sub">Hash Verse-Visualizer</div>
+<p>A hash function turns any word into a number, and that number is the exact box where the computer keeps it. Type a word and watch the 3D table below.</p>
+<div class="formula">Index = ASCII sum mod 7</div>
+<div class="try"><input id="hi" type="text" placeholder="Try a word: cat, act, dog..." aria-label="Try a word"><button id="hb">Store it</button></div>
+<div id="ho">Type a word to see which box it goes to.</div></div>
+<div class="stage" id="st"><div class="world" id="w"></div></div></section>
+<nav class="tabs"><a href="#m1">1. Memory Grid</a><a href="#m2">2. Password Avalanche</a><a href="#m3">3. Plagiarism Scanner</a><a href="#m4">4. LRU Cache</a><a href="#m5">5. Break the Hash</a></nav></div>
+<main>
+<section class="card" id="m1" style="--a:#0e9ac4;--a2:#0b5f95"><h2>1. Memory Grid</h2><div class="bd">
+<p class="lead">Words go into numbered boxes. Green = empty, blue = used, red = collision.</p>
+<div class="basics"><h3>Basic concepts (start here)</h3><ul><li><b>Hash table:</b> a big row of numbered boxes (0, 1, 2, 3...). Think of school lockers: every locker has a number.</li><li><b>Hash function:</b> a rule that turns a word into a locker number, so the computer never has to search every locker.</li><li><b>ASCII sum:</b> every letter has a secret number (a = 97, t = 116). Add them up. "cat" = 99 + 97 + 116 = 312.</li><li><b>Modulo (mod):</b> the remainder after division. 312 mod 7 = 4, because 7 x 44 = 308 and 4 is left. This keeps the number inside the table.</li><li><b>Collision:</b> two different words get the same box, for example "cat" and "act". This is normal and must be handled.</li><li><b>Linear probing:</b> box taken? Check the next box, then the next, until an empty one is found.</li><li><b>Quadratic probing:</b> box taken? Jump 1, then 4, then 9 boxes ahead. This spreads words out better.</li><li><b>Chaining:</b> every box keeps a small list, so words that collide simply join the list.</li><li><b>Load factor:</b> used boxes divided by total boxes. It shows how full the table is.</li><li><b>Rehashing:</b> when the table is 70% full, it grows to the next prime size and every word is placed again, so it stays fast.</li></ul><h3>How it works, step by step</h3><ol><li>Type a word and press Insert.</li><li>The program adds the ASCII codes of all letters.</li><li>It takes the remainder with the table size. That is the box number.</li><li>Box empty (green)? The word is stored and the box turns blue.</li><li>Box taken? The box flashes red, and the chosen method (linear, quadratic or chaining) finds another place.</li><li>Search repeats the same steps, so finding a word is almost instant.</li></ol></div>
+<div class="row"><select id="m1s" aria-label="Collision method"><option value="1">Linear probing</option><option value="2">Quadratic probing</option><option value="3">Separate chaining</option></select>
+<input type="text" id="m1i" placeholder="Type a word, e.g. cat" aria-label="Word"><button id="m1b">Insert</button><button class="alt" id="m1f">Search</button><button class="alt" id="m1r">Reset</button></div>
+<div class="grid" id="m1g"></div><div class="how" id="m1l"></div><div class="log" id="m1o">Output appears here.</div>
+<p class="how">Collision = two words want the same box. Linear probing tries the next box, quadratic tries +1, +4, +9, chaining links words inside one box. At 70% full the table grows to the next prime size and every word is placed again (rehashing).</p></div></section>
+
+<section class="card" id="m2" style="--a:#7a5af8;--a2:#4f2fc4"><h2>2. Password Avalanche</h2><div class="bd">
+<p class="lead">Change one character and the whole hash changes.</p>
+<div class="basics "><h3>Basic concepts (start here)</h3><ul><li><b>Hash:</b> a long scrambled number made from a password.</li><li><b>One-way:</b> easy to make the hash from a password, but practically impossible to get the password back from the hash.</li><li><b>Bits:</b> a computer stores numbers as 0s and 1s. This hash has 64 of them.</li><li><b>XOR and bit shifting:</b> small mixing tricks that stir the 0s and 1s together.</li><li><b>Avalanche effect:</b> change just one letter and about half of all bits change. The result looks totally different.</li><li><b>Why it matters:</b> a website saves only the hash. Even if its database leaks, hackers see scrambled numbers, not passwords. (This is a demo; real systems use stronger methods like bcrypt.)</li></ul><h3>How it works, step by step</h3><ol><li>Type two passwords that differ by one character.</li><li>Each letter is mixed into a running number using XOR, multiply and shift.</li><li>Two 64-bit hashes appear.</li><li>Bits that differ are shown in red, with the count.</li></ol></div>
+<input type="text" id="p1" value="Hello123" aria-label="First password" style="width:100%;margin-bottom:6px"><input type="text" id="p2" value="Hello124" aria-label="Second password" style="width:100%">
+<div class="hash" id="h1"></div><div class="hash" id="h2"></div><div class="log" id="m2o"></div>
+<p class="how">Red bits differ. A tiny change flips about half of the 64 bits, so hashes cannot be guessed. (Demo only, not real security.)</p></div></section>
+
+<section class="card" id="m3" style="--a:#e8920a;--a2:#b05a00"><h2>3. Plagiarism Scanner</h2><div class="bd">
+<p class="lead">Finds copied pieces by comparing hashes of small text windows.</p>
+<div class="basics "><h3>Basic concepts (start here)</h3><ul><li><b>Plagiarism:</b> copying someone else’s text.</li><li><b>Window:</b> a small piece of text with fixed length, for example 5 letters.</li><li><b>Sliding window:</b> the window moves one letter at a time across the whole text.</li><li><b>Hash of a window:</b> each window becomes one number, and comparing two numbers is faster than comparing letters.</li><li><b>Rolling hash:</b> to move the window, remove the first letter’s part and add the new letter. No need to start again, so it is O(1).</li><li><b>Rabin-Karp:</b> the algorithm that uses this idea to find matching pieces quickly.</li><li><b>Double check:</b> if hashes match, the letters are compared too, to avoid a false alarm.</li><li><b>Similarity %:</b> copied letters divided by total letters.</li></ul><h3>How it works, step by step</h3><ol><li>Paste the original text and the suspect text.</li><li>Every window of both texts is turned into a hash.</li><li>Equal hashes are checked letter by letter.</li><li>Matching parts turn yellow, and the percentage is shown.</li></ol></div>
+<div class="row"><label for="k">Window size</label><input type="number" id="k" value="5" min="2" max="12" style="width:76px"><button id="m3b">Scan</button></div>
+<textarea id="ta" aria-label="Original text">Hash tables store data in arrays and find it very fast.</textarea>
+<textarea id="tb" aria-label="Suspect text" style="margin-top:6px">I learned that hash tables store data in arrays quickly.</textarea>
+<p><b id="pc">0%</b> of the original is copied</p><div class="meter"><i id="pb"></i></div>
+<p class="how">Original text, copied parts in yellow:</p><div class="txt" id="m3o"></div>
+<p class="how">The window slides one letter at a time. The rolling hash drops the first letter and adds the next, so each step costs O(1).</p></div></section>
+
+<section class="card" id="m4" style="--a:#12a06b;--a2:#0a6e4a"><h2>4. LRU Cache</h2><div class="bd">
+<p class="lead">Only 3 fast slots. When full, the oldest unused item is evicted.</p>
+<div class="basics "><h3>Basic concepts (start here)</h3><ul><li><b>Cache:</b> a small, very fast memory that keeps recently used things, like web pages in a browser.</li><li><b>Why small:</b> fast memory is expensive, so it can only hold a few items. Here it holds 3.</li><li><b>Hit:</b> the item is already in the cache. Very fast.</li><li><b>Miss:</b> the item is not in the cache, so it must be loaded.</li><li><b>LRU (Least Recently Used):</b> when the cache is full, remove the item that was not used for the longest time.</li><li><b>Eviction:</b> the removal of that oldest item.</li><li><b>Hash map + linked list:</b> the map finds any item instantly, the list keeps the order from newest to oldest. Together every step is O(1).</li></ul><h3>How it works, step by step</h3><ol><li>Type a page name and press Request.</li><li>Already there (hit)? It moves to the newest position.</li><li>Not there (miss) and a slot is free? It is added.</li><li>Not there and all 3 slots are full? The oldest turns red and is evicted, then the new one is added.</li></ol></div>
+<div class="row"><input type="text" id="c1" placeholder="Open a page, e.g. google" aria-label="Page"><button id="c1b">Request</button><button class="alt" id="c1r">Reset</button></div>
+<div class="slots" id="cs"></div><div class="log" id="m4o">Newest on the left, oldest on the right.</div>
+<p class="how">Asking for something already cached is a hit and moves it to the newest spot.</p></div></section>
+
+<section class="card" id="m5" style="--a:#e5484d;--a2:#b0222c"><h2>5. Break the Hash</h2><div class="bd">
+<p class="lead">Pick a target box. Find a word that lands exactly there. 3 attempts.</p>
+<div class="basics "><h3>Basic concepts (start here)</h3><ul><li><b>Target box:</b> the box number you must hit, chosen by you.</li><li><b>Goal:</b> find any word whose ASCII sum mod table size equals the target.</li><li><b>Pigeonhole idea:</b> there are endless words but only a few boxes, so many different words must share a box.</li><li><b>What you learn:</b> collisions are unavoidable, which is why every hash table needs a collision method.</li></ul><h3>How it works, step by step</h3><ol><li>Choose a table size and a target box, then press Start.</li><li>Type a word. The program shows its ASCII sum and the remainder.</li><li>Remainder equals target? You broke the hash and win.</li><li>You have 3 attempts.</li></ol></div>
+<div class="row"><label for="gs">Size</label><input type="number" id="gs" value="7" min="2" max="50" style="width:70px"><label for="gt">Target</label><input type="number" id="gt" value="3" min="0" style="width:70px"><button id="gb">Start</button></div>
+<div class="row"><input type="text" id="gi" placeholder="Your word" aria-label="Guess" disabled><button id="gg" disabled>Guess</button></div>
+<div class="log" id="m5o">Press Start.</div>
+<p class="how">Hint: change letters until the ASCII sum has the right remainder.</p></div></section>
+</main>
+<section class="end"><div>
+<h2>Welcome to the Hashing Journey. Enjoy!</h2>
+<p>Every search you make, every password you type and every web page that opens in a blink uses the ideas you just explored. Keep experimenting: break a table, cause a collision, evict a cache. The more you play, the clearer hashing becomes.</p>
+<div class="pills"><span style="background:#6fd8f0">Store</span><span style="background:#ff8f93">Collide</span><span style="background:#ffd85e">Scan</span><span style="background:#6fe3b4">Cache</span><span style="background:#c9b9ff">Hash</span></div>
+</div></section>
+<footer>Department of CSE, BAUST, Khulna &nbsp;|&nbsp; DSA Sessional I, Level 2 Term 1 &nbsp;|&nbsp; ID: 107252000101022, 107252000101028</footer>
+<script src="script.js"></script></body></html>
